@@ -3,6 +3,7 @@
 namespace App\Commands;
 
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Http;
 use LaravelZero\Framework\Commands\Command;
 
 class SecondCommand extends Command
@@ -29,6 +30,17 @@ class SecondCommand extends Command
     public function handle()
     {
         $this->info('Hello World22222222222');
+        $response = Http::get("https://public.ecologi.com/users/laravel/impact");
+
+
+
+        ['trees' => $trees, 'carbonOffset' => $carbonOffset] = $response->json();
+
+        $this->info("@laravel has planted {$trees} trees, and offset {$carbonOffset} tonnes of CO2");
+
+
+
+
     }
 
     /**

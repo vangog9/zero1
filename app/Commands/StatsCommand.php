@@ -28,27 +28,35 @@ class StatsCommand extends Command
      * @return mixed
      */
     public function handle(): void
-{
-    //$username = $this->argument('username');
+    {
+        $username = $this->argument('username');
 
-    $username = 'laravel';
+        $search_response = Http::get("https://api.github.com/search/code?q={$username}&access_token=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");
 
-    $response = Http::get("https://public.ecologi.com/users/{$username}/impact");
+//        if (!$search_response->ok()) {
+//            $this->warn('Nope!!!!!!!!!!!!!!!!!');
+//            return;
+//        }
+        //      , 'name'=>$name    and name is {$name}
+        ['total_count' => $count] = $search_response->json();
+        //$search = $search_response->json();
+        $searchArray = json_decode($search_response, false);
+        $this->info("The number of {$username} is {$count} ");
 
-    if (! $response->ok()) {
-        $this->warn('Failed to retrieve user statistics');
-        return ;
+        dd(array_count_values($searchArray));
+
+
+
+        //$names[] = $searchArray['items']['name'];
+
+        //dd($names);
+
     }
-
-    ['trees' => $trees, 'carbonOffset' => $carbonOffset] = $response->json();
-
-    $this->info("@{$username} has planted {$trees} trees, and offset {$carbonOffset} tonnes of CO2");
-}
 
     /**
      * Define the command's schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     * @param \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     public function schedule(Schedule $schedule): void
