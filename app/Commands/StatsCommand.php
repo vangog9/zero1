@@ -29,7 +29,9 @@ class StatsCommand extends Command
      */
     public function handle(): void
 {
-    $username = $this->argument('username');
+    //$username = $this->argument('username');
+
+    $username = 'laravel';
 
     $response = Http::get("https://public.ecologi.com/users/{$username}/impact");
 
