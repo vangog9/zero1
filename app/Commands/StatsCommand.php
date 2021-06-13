@@ -32,9 +32,16 @@ class StatsCommand extends Command
     {
         $username = $this->argument('username');
 
-        $search_response = Http::get("https://api.github.com/search/code?q={$username}&access_token=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");
+        $search_response = Http::get("https://api.github.com/search/code?q={$username}&access_token=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");
+
+        if (!$search_response->successful()) {
+            $this->warn('Nope!!!!!!!!!!!!!!!!!');
+            return;
+        }
+
 
         ['total_count' => $count] = $search_response->json();
+
         if ($count == 0) {
             $this->warn('EMPTY!!!!!');
             return;
@@ -43,24 +50,29 @@ class StatsCommand extends Command
         $page_number = ceil($count / 100);
         $this->info("The number of {$username} is {$count} ");
 
-        for ($page = 0; $page <= $page_number - 1; $page++) {
+        for ($page = 0; $page < $page_number; $page++) {
             $current_page = $page + 1;
-            $search_response = Http::get("https://api.github.com/search/code?q={$username}&access_token=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&per_page=100&page={$current_page}");
-
-//            if (!$search_response[$page]->successful()) {
-//                $this->warn('Nope!!!!!!!!!!!!!!!!!');
-//                return;
-//            }
+            $search_response = Http::get("https://api.github.com/search/code?q={$username}&access_token=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&per_page=100&page={$current_page}");
 
             $searchArray = json_decode($search_response, true);
-            $how_many = 100-(100-$count);
+
+            $how_many = 100;
+
+            if ($count < 100)
+                $how_many = $count % 100;
+
+            $count = $count - 100;
 
             for ($item = 0; $item < $how_many; $item++) {
+                $this->info("********************************************************** {$item}");
                 $this->info($searchArray['items'][$item]['name']);
                 $this->info('');
                 $this->info($searchArray['items'][$item]['html_url']);
-                $this->info('');
+
             }
+
+
+
         }
     }
 
