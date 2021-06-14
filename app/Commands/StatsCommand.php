@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Http;
 use LaravelZero\Framework\Commands\Command;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\Console\Input\InputArgument;
 
 class StatsCommand extends Command
 {
@@ -15,7 +16,7 @@ class StatsCommand extends Command
      * @var string
      */
     protected $signature = 'stats {username} {token}';
-
+//
     /**
      * The description of the command.
      *
@@ -30,8 +31,9 @@ class StatsCommand extends Command
      */
     public function handle(): void
     {
-        $username = $this->argument('username');
-        $token = $this->argument('token');
+        $username = $this
+            ->addArgument('username', InputArgument::REQUIRED)
+            ->addArgument('token', InputArgument::REQUIRED);
 
         $search_response = Http::get("https://api.github.com/search/code?q={$username}&access_token={$token}}");
 
@@ -39,7 +41,6 @@ class StatsCommand extends Command
             $this->warn('Nope!!!!!!!!!!!!!!!!!');
             return;
         }
-
 
         ['total_count' => $count] = $search_response->json();
 
@@ -71,7 +72,6 @@ class StatsCommand extends Command
                 $this->info($searchArray['items'][$item]['html_url']);
 
             }
-
 
 
         }
