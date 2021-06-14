@@ -14,7 +14,7 @@ class StatsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'stats {username}';
+    protected $signature = 'stats {username} {token}';
 
     /**
      * The description of the command.
@@ -31,8 +31,9 @@ class StatsCommand extends Command
     public function handle(): void
     {
         $username = $this->argument('username');
+        $token = $this->argument('token');
 
-        $search_response = Http::get("https://api.github.com/search/code?q={$username}&access_token=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");
+        $search_response = Http::get("https://api.github.com/search/code?q={$username}&access_token={$token}}");
 
         if (!$search_response->successful()) {
             $this->warn('Nope!!!!!!!!!!!!!!!!!');
@@ -52,7 +53,7 @@ class StatsCommand extends Command
 
         for ($page = 0; $page < $page_number; $page++) {
             $current_page = $page + 1;
-            $search_response = Http::get("https://api.github.com/search/code?q={$username}&access_token=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&per_page=100&page={$current_page}");
+            $search_response = Http::get("https://api.github.com/search/code?q={$username}&access_token={$token}}&per_page=100&page={$current_page}");
 
             $searchArray = json_decode($search_response, true);
 
