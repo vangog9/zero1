@@ -20,7 +20,7 @@ class Gitsearch extends Command
      *
      * @var string
      */
-    protected $description = 'Retrieve the GitSearch';
+    protected $description = 'Retrieve the GitSearch101';
 
     /**
      * Execute the console command.
